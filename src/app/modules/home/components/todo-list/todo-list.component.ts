@@ -8,9 +8,7 @@ import { TaskList } from '../../model/task-list';
 })
 export class TodoListComponent implements OnInit, DoCheck {
 
-  taskList: Array<TaskList> = [
-    
-  ]
+  taskList: Array<TaskList> = JSON.parse(localStorage.getItem("list") || '[]')
 
   constructor() { }
 
@@ -18,7 +16,7 @@ export class TodoListComponent implements OnInit, DoCheck {
   }
 
   ngDoCheck() {
-    this.taskList.sort( (a, b) => Number(a.checked) - Number(b.checked))
+    this.setLocalStorage()
   }
 
   deleteItemTaskList(event: number) {
@@ -43,6 +41,13 @@ export class TodoListComponent implements OnInit, DoCheck {
       if(confirm) {
         this.deleteItemTaskList(index)
       }
+    }
+  }
+
+  setLocalStorage() {
+    if(this.taskList) {
+      this.taskList.sort( (a, b) => Number(a.checked) - Number(b.checked))
+      localStorage.setItem("list", JSON.stringify(this.taskList))
     }
   }
 
