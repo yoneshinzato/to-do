@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, DoCheck } from '@angular/core';
 import { TaskList } from '../../model/task-list';
 
 @Component({
@@ -6,7 +6,7 @@ import { TaskList } from '../../model/task-list';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.scss']
 })
-export class TodoListComponent implements OnInit {
+export class TodoListComponent implements OnInit, DoCheck {
 
   taskList: Array<TaskList> = [
     
@@ -15,6 +15,10 @@ export class TodoListComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  ngDoCheck() {
+    this.taskList.sort( (a, b) => Number(a.checked) - Number(b.checked))
   }
 
   deleteItemTaskList(event: number) {
@@ -30,7 +34,16 @@ export class TodoListComponent implements OnInit {
 
   setEmitTaskList(event: string) {
     this.taskList.push({task: event, checked: false})
-    
+  }
+
+  validationInput(event: string, index: number) {
+    if(!event.length) {
+      const confirm = window.confirm("Task está vazia! Deseja deletar?")
+
+      if(confirm) {
+        this.deleteItemTaskList(index)
+      }
+    }
   }
 
 }
